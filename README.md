@@ -1,10 +1,10 @@
 # RISC-V Single-Cycle CPU
 
 Building a single-cycle RISC-V CPU in Verilog, following Harris & Harris
-(Digital Design and Computer Architecture, RISC-V edition), module by module.
+(Digital Design and Computer Architecture, RISC-V edition, Chapter 7.3) 
 
 ## Status
-- [x] PC
+- [x] Program Counter
 - [x] Instruction memory
 - [x] Register file
 - [ ] ALU

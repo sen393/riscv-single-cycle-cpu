@@ -11,7 +11,7 @@ module imem (
 
 	// Load instructions from file into array
 	initial begin
-		$readmemh("program.hex", imem);
+		$readmemh("programs/program.hex", imem);
 	end
 
 	// Load instruction to output instr

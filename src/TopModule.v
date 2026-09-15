@@ -25,7 +25,7 @@ module TopModule (
     RegFile regfile ( .clk( clk ), .we3( reg_write ), .a1( instr[19:15] ), .a2( instr[24:20] ), .a3( instr[11:7] ), .wd3( result ), .rd1( rd_1 ), .rd2( rd_2 ) );
     ImmExt immext ( .imm_src( imm_src ), .instr( instr ), .imm_ext( imm_ext ) );
     Mux2 select_b ( .sel(alu_src), .a( rd_2 ), .b( imm_ext ), .out( alu_mux_out ) );
-    ALU alu ( .alu_control( /* Missing alu_control */ ), .a( rd_1 ), .b( alu_mux_out ), .result( alu_result ), .zero( zero ) );
+    ALU alu ( .alu_control( alu_control ), .a( rd_1 ), .b( alu_mux_out ), .result( alu_result ), .zero( zero ) );
     DMem dmem ( .clk( clk ), .we( mem_write ), .addr( alu_result ), .write_data( rd_2 ), .read_data( read_data ) );
     Mux2 select_alu_dmem ( .sel( result_src ), .a( alu_result ), .b( read_data ), .out( result ) );
 

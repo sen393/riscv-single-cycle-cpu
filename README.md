@@ -7,7 +7,9 @@ Building a single-cycle RISC-V CPU in Verilog, following Harris & Harris
 - [x] Program Counter
 - [x] Instruction memory
 - [x] Register file
-- [ ] ALU
+- [x] Immediate extender
+- [x] ALU
+- [x] Data memory
 - [ ] Control unit
 - [ ] Full datapath integration
 

@@ -1,4 +1,4 @@
-module pcplus4 (
+module PCPlus4 (
     input  [31:0] pc_in,
     output [31:0] pc_out
 );

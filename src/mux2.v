@@ -4,6 +4,6 @@ module mux2(
     input sel,
     output [31:0] out
 );
-    // Note: This mux is used for ALUSrc and ResultSrc
+    // Note: This mux is used for PCSrc, ALUSrc, ResultSrc
     assign out = (sel) ? b : a;
 endmodule

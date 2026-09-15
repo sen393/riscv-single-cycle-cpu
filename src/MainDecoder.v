@@ -20,7 +20,7 @@ module MainDecoder (
                 imm_src     = 2'b00; // Not used
                 alu_op      = 2'b10; // ALU control determined by funct3 and funct7
             end
-            7'b0000011: begin // I-type (Load)
+            7'b0000011: begin // I-type (lw)
                 branch      = 0;
                 mem_write   = 0;
                 reg_write   = 1;
@@ -29,7 +29,7 @@ module MainDecoder (
                 imm_src     = 2'b00; // I-type immediate
                 alu_op      = 2'b00; // ALU performs addition for address calculation
             end
-            7'b0100011: begin // S-type (Store)
+            7'b0100011: begin // S-type (sw)
                 branch      = 0;
                 mem_write   = 1; // Enable memory write
                 reg_write   = 0;
@@ -38,7 +38,7 @@ module MainDecoder (
                 imm_src     = 2'b01; // S-type immediate
                 alu_op      = 2'b00; // ALU performs addition for address calculation
             end
-            7'b1100011: begin // B-type (Branch)
+            7'b1100011: begin // B-type (beq)
                 branch      = 1; // Enable branching
                 mem_write   = 0;
                 reg_write   = 0;
@@ -46,6 +46,15 @@ module MainDecoder (
                 alu_src     = 0; // Register value used as ALU operand
                 imm_src     = 2'b10; // B-type immediate
                 alu_op      = 2'b01; // ALU performs subtraction for comparison
+            end
+            7'b0010011: begin // I-type (addi)
+                branch      = 0;
+                mem_write   = 0;
+                reg_write   = 1;
+                result_src  = 0; // Not used
+                alu_src     = 1; // Immediate value used as ALU operand
+                imm_src     = 2'b00; // I-type immediate
+                alu_op      = 2'b10; // ALU performs addition
             end
             default: begin
                 branch      = 0;

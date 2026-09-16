@@ -52,7 +52,7 @@ design workflow.
 - [ ] bne, blt, bge, bltu, bgeu
 
 **U-type**
-- [ ] lui (needs a 3rd ResultSrc option — first real extension beyond mux2)
+- [ ] lui
 - [ ] auipc
 
 **J-type**
@@ -68,3 +68,4 @@ design workflow.
 ```bash
 ./run_tests.sh <module>
 ```
+(Only working for 'imem' and 'regfile' currently)

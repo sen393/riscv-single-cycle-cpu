@@ -27,12 +27,13 @@ design workflow.
 
 **R-type**
 - [x] or
-- [ ] add
-- [ ] sub
-- [ ] and
-- [ ] slt
-- [ ] sll, srl, sra
-- [ ] xor
+- [x] add
+- [x] sub
+- [x] and
+- [x] slt
+- [x] sltu
+- [x] sll, srl, sra
+- [x] xor
 
 **I-type (arithmetic/logic)**
 - [x] addi
@@ -56,7 +57,7 @@ design workflow.
 - [ ] auipc
 
 **J-type**
-- [ ] jal
+- [x] jal
 - [ ] jalr
 
 ## Structure

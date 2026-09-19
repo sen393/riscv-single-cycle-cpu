@@ -1,4 +1,5 @@
-module PCBranch (
+module PCBranch
+(
     input  [31:0] pc,
     input  [31:0] imm_ext,
     output [31:0] pc_target

@@ -27,11 +27,16 @@ module TopModule_tb;
         repeat (30) begin
             @(posedge clk);
             #1;
-            $display("t=%0t pc=%h instr=%h | x4=%0d x5=%0d x6=%0d x7=%0d x9=%0d",
-                $time, uut.pc, uut.instr,
-                uut.regfile.x[4], uut.regfile.x[5], uut.regfile.x[6],
-                uut.regfile.x[7], uut.regfile.x[9]);
+        $display("t=%0t pc=%h | x7=%0d x8=%0d x9=%0d x10=%0d x11=%0d x12=%0d x13=%0d x15=%0d(%0d) x16=%0d x17=%0d x18=%0d x19=%0d x20=%h x21=%0d x22=%0d",
+            $time, uut.pc,
+            uut.regfile.x[7], uut.regfile.x[8], uut.regfile.x[9], uut.regfile.x[10],
+            uut.regfile.x[11], uut.regfile.x[12], uut.regfile.x[13],
+            $signed(uut.regfile.x[15]), uut.regfile.x[15],
+            uut.regfile.x[16], uut.regfile.x[17], uut.regfile.x[18], uut.regfile.x[19],
+            uut.regfile.x[20], uut.regfile.x[21], uut.regfile.x[22]);
         end
+
+        // iverilog -o sim_out src/TopModule.v src/PC.v src/PCPlus4.v src/PCBranch.v src/IMem.v src/Mux3.v src/Mux2.v src/RegFile.v src/ImmExt.v src/ALU.v src/DMem.v src/MainDecoder.v src/ALUDecoder.v src/PCSrc.v sim/TopModule-tb.v && vvp sim_out
 
         $finish;
     end

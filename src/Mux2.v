@@ -1,4 +1,5 @@
-module Mux2 (
+module Mux2
+(
     input         sel,
     input  [31:0] a,
     input  [31:0] b,

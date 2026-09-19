@@ -1,7 +1,8 @@
-module IMem (
+module IMem
+(
 	input  [31:0] pc,
 	output [31:0] instr
-	);
+);
 
 	// Divide program counter by four
 	wire [31:0] pc_div;

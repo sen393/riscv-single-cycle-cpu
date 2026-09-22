@@ -26,21 +26,26 @@ design workflow.
 ## Function To-Do List
 
 **R-type**
-- [x] or
 - [x] add
 - [x] sub
-- [x] and
+- [x] sll
 - [x] slt
 - [x] sltu
-- [x] sll, srl, sra
 - [x] xor
+- [x] srl, sra
+- [x] or
+- [x] and
 
 **I-type (arithmetic/logic)**
 - [x] addi
-- [ ] andi
-- [ ] ori
-- [ ] slti
-- [ ] xori
+- [x] slti
+- [x] sltiu
+- [x] xori
+- [x] ori
+- [x] andi
+- [x] slli
+- [x] srli
+- [x] srai
 
 **I-type (load)**
 - [x] lw

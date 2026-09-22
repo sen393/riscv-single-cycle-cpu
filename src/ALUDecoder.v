@@ -6,11 +6,16 @@ module ALUDecoder
     input      [1:0] alu_op,
     output reg [3:0] alu_control
 );
-    // MSB bit selecter for alternate operations
-    // sub/add, sra/srl
-    wire alt_bit = (funct3 == 3'b000 || funct3 == 3'b101)
-                        ? (opcode[5] & funct7[5])
-                        : 1'b0;
+
+    reg alt_bit;
+
+    always @(*) begin
+        case (funct3)
+            3'b000:     alt_bit = (funct7[5] & opcode[5]);
+            3'b101:     alt_bit = (funct7[5]);
+            default:    alt_bit = 1'b0;
+        endcase
+    end
 
     always @(*) begin
         case (alu_op)

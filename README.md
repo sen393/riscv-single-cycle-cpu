@@ -8,7 +8,7 @@ design workflow.
 
 ## Status
 
-**(As of 2025-09-23)**
+**(As of 2026-09-23)**
 
 **Datapath:**
 - [x] PC, PCPlus4, PCBranch

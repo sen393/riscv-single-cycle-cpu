@@ -44,7 +44,8 @@ module TopModule (
 
     // Decode stage intermediate wires
     wire [31:0] rd_1, rd_2;
-    wire [31:0] alu_mux_out;
+    wire [31:0] alu_a_mux_out;
+    wire [31:0] alu_b_mux_out;
     wire [31:0] alu_result;
     wire [31:0] read_data;
     wire [31:0] result;
@@ -72,17 +73,26 @@ module TopModule (
 
     Mux2 select_b
     (
-        .sel    (alu_src),
+        .sel    (alu_b_src),
         .a      (rd_2),
         .b      (imm_ext),
-        .out    (alu_mux_out)
+        .out    (alu_b_mux_out)
+    );
+
+    Mux3 select_a
+    (
+        .sel    (alu_a_src),
+        .a      (32'b0),
+        .b      (pc),
+        .c      (rd_1),
+        .out    (alu_a_mux_out)
     );
 
     ALU alu
     (
         .alu_control    (alu_control),
-        .a              (rd_1),
-        .b              (alu_mux_out),
+        .a              (alu_a_mux_out),
+        .b              (alu_b_mux_out),
         .result         (alu_result),
         .zero           (zero)
     );
@@ -110,8 +120,9 @@ module TopModule (
     wire [6:0] opcode = instr[6:0];
     wire [2:0] funct3 = instr[14:12];
     wire [6:0] funct7 = instr[31:25];
-    wire       branch, jump, mem_write, reg_write, alu_src, pc_src;
-    wire [1:0] imm_src, result_src, alu_op;
+    wire       branch, jump, mem_write, reg_write, alu_b_src, pc_src;
+    wire [1:0] result_src, alu_a_src, alu_op;
+    wire [2:0] imm_src;
     wire [3:0] alu_control;
 
     MainDecoder main_decoder
@@ -122,7 +133,8 @@ module TopModule (
         .mem_write  (mem_write),
         .reg_write  (reg_write),
         .result_src (result_src),
-        .alu_src    (alu_src),
+        .alu_a_src  (alu_a_src),
+        .alu_b_src  (alu_b_src),
         .imm_src    (imm_src),
         .alu_op     (alu_op)
     );

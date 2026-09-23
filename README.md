@@ -7,8 +7,8 @@ I/O for buttons/display. This will then be ported to a Spartan-7 board as a prac
 design workflow. 
 
 ## Status
-
-**Datapath: fully wired and verified working (As of 2025-09-15)**
+***(As of 2025-09-23)***
+**Datapath:**
 - [x] PC, PCPlus4, PCBranch
 - [x] Instruction memory (IMem)
 - [x] Register file (RegFile)
@@ -19,9 +19,7 @@ design workflow.
 - [x] Control unit — MainDecoder, ALUDecoder, PCSrc
 - [x] TopModule — full datapath wired together
 
-**Verified via testbench:**
-- [x] Instruction memory, Register file
-- [x] Full datapath (via TopModule_tb, not per-module for alu/dmem/imm_ext/mux2)
+**Total Functions Implemented: 25**
 
 ## Function To-Do List
 
@@ -58,20 +56,34 @@ design workflow.
 - [ ] bne, blt, bge, bltu, bgeu
 
 **U-type**
-- [ ] lui
-- [ ] auipc
+- [x] lui
+- [x] auipc
 
 **J-type**
 - [x] jal
 - [ ] jalr
 
 ## Structure
+
 - `src/` — hardware modules
 - `sim/` — testbenches
 - `programs/` — hex-encoded test programs
 
 ## Running a testbench
+
+To compile and run the main CPU testbench:
+
 ```bash
-./run_tests.sh <module>
+./run.sh
 ```
-(Only working for 'imem' and 'regfile' currently)
+
+The script:
+
+- Compiles all Verilog modules in `src/`
+- Uses `sim/TopModule-tb.v` as the top-level testbench
+- Runs the simulation with `vvp`
+- Prints the test results to the terminal
+- Saves the same output to `sim_output.txt`
+- Generates `topmodule_tb.vcd` for waveform inspection
+
+The testbench is self-checking, so expected register values and control-flow behavior are reported automatically as `PASS` or `FAIL`.

@@ -25,8 +25,6 @@ design workflow.
 
 ## Current Schematic
 
-Click the image to view the full-resolution schematic.
-
 <a href="images/single-cycle-riscv.jpg">
   <img src="images/single-cycle-riscv.jpg"
        alt="RISC-V Single-Cycle CPU Schematic"

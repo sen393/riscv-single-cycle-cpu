@@ -23,6 +23,16 @@ design workflow.
 
 **Total Functions Implemented: 25**
 
+## Current Schematic
+
+Click the image to view the full-resolution schematic.
+
+<a href="images/cpu-schematic.png">
+  <img src="images/cpu-schematic.png"
+       alt="RISC-V Single-Cycle CPU Schematic"
+       width="900">
+</a>
+
 ## Function To-Do List
 
 **R-type**

@@ -27,8 +27,8 @@ design workflow.
 
 Click the image to view the full-resolution schematic.
 
-<a href="images/cpu-schematic.png">
-  <img src="images/cpu-schematic.png"
+<a href="images/single-cycle-riscv.jpg">
+  <img src="images/single-cycle-riscv.jpg"
        alt="RISC-V Single-Cycle CPU Schematic"
        width="900">
 </a>

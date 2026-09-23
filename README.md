@@ -7,7 +7,9 @@ I/O for buttons/display. This will then be ported to a Spartan-7 board as a prac
 design workflow. 
 
 ## Status
-***(As of 2025-09-23)***
+
+**(As of 2025-09-23)**
+
 **Datapath:**
 - [x] PC, PCPlus4, PCBranch
 - [x] Instruction memory (IMem)

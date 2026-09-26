@@ -1,19 +1,21 @@
 # RISC-V Single-Cycle CPU
 
-A 32-bit single-cycle RISC-V processor implemented in Verilog, based on the architecture presented in *Digital Design and Computer Architecture: RISC-V Edition* by Harris & Harris.
+A 32-bit single-cycle RISC-V processor implemented in Verilog, based on the architecture presented in Digital Design and Computer Architecture: RISC-V Edition by Harris & Harris.
 
-The processor currently implements a 36-instruction subset of RV32I, including integer arithmetic and logic, byte/halfword/word loads and stores, jumps, upper-immediate instructions, and all six conditional branch instructions. The design is verified using a self-checking testbench and will ultimately be synthesized and tested on a Spartan-7 FPGA.
+The processor currently implements 37 RV32I instructions, including integer arithmetic and logic, byte/halfword/word loads and stores, conditional branches, direct and indirect jumps, and upper-immediate instructions. The design is verified using a self-checking testbench and will ultimately be synthesized and tested on a Spartan-7 FPGA.
 
 ## Status
 
 - Complete single-cycle datapath and control unit
-- 36 RV32I instructions implemented
+- 37 RV32I instructions implemented
 - Self-checking simulation for implemented instructions
 - FPGA synthesis and implementation planned in Vivado
 
 ## Architecture
 
-The processor uses a single-cycle datapath with separate instruction and data memories, a 32-bit register file, immediate extension, ALU, branch/jump logic, and a centralized control unit. 
+The processor uses a single-cycle datapath with separate instruction and data memories, a 32-bit register file, immediate extension, ALU, branch/jump logic, and a centralized control unit.
+
+The next-PC logic supports sequential execution, PC-relative branches and jumps, and register-relative jalr targets.
 
 Click the schematic to view the full-resolution image.
 
@@ -33,9 +35,9 @@ Click the schematic to view the full-resolution image.
 | Store | `sw`, `sb`, `sh` |
 | Branch | `beq`, `bne`, `blt`, `bge`, `bltu`, `bgeu` |
 | Upper immediate | `lui`, `auipc` |
-| Jump | `jal` |
+| Jump | `jal`, `jalr` |
 
-**Total: 36 instructions**
+**Total: 37 instructions**
 
 ## Verification
 
@@ -46,10 +48,14 @@ The current test suite verifies:
 - Arithmetic and logical operations
 - Signed and unsigned comparisons
 - Shift operations
-- Jump and branch control flow
+- Taken and not-taken branch behavior
+- Direct and register-relative jumps
+- jal and jalr link-address write-back
+- jalr target alignment behavior
 - Upper-immediate instructions
 - Byte, halfword, and word loads/stores
 - Signed and unsigned load extension
+- Partial memory writes
 - Register write-back behavior
 
 Simulation results are checked automatically against expected register values, while generated VCD waveforms can be inspected for additional debugging and timing analysis.
@@ -89,8 +95,7 @@ The generated VCD file can be opened in a waveform viewer such as GTKWave.
 
 ## Roadmap
 
-- [ ] Implement `jalr`
-- [ ] Complete planned RV32I instruction support
+- [ ] Complete remaining RV32I system/synchronization instruction support as needed
 - [ ] Synthesize the processor in Vivado
 - [ ] Analyze timing and FPGA resource utilization
 - [ ] Implement and test the processor on a Spartan-7 FPGA

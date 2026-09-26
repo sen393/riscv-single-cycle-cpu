@@ -153,6 +153,7 @@ module TopModule (
         .zero   (zero),
         .jump   (jump),
         .branch (branch),
+        .funct3 (funct3),
         .pc_src (pc_src)
     );
 

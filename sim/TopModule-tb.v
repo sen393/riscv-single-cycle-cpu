@@ -72,8 +72,10 @@ module TopModule_tb;
     //   addi x22, x0,222
     //   lui  x23,0x12345
     //   auipc x24,0
-    //   beq  x24,x24,0
     //
+    //   ... branch tests using x25-x30 ...
+    //
+    //   jal x0, 0              <-- final infinite loop at PC=0xE0
     // ============================================================
 
     // Main test
@@ -91,10 +93,10 @@ module TopModule_tb;
         reset = 0;
 
         // Run program
-        // Our current program reaches its final BEQ loop after
-        // about 19 instructions.
+        // Run long enough to complete all tests and reach
+        // the final JAL loop at PC=0xE0.
 
-        repeat (22)
+        repeat (60)
             @(posedge clk);
 
         #1;
@@ -127,35 +129,45 @@ module TopModule_tb;
         // Check JAL
         $display("");
         $display("Checking JAL...");
-
-        check_reg(20, 32'h00000040);
-
         if (uut.regfile.x[21] === 32'd111) begin
-            $display("FAIL: JAL did not skip instruction at PC=0x40");
-            failures = failures + 1;
-        end
-        else begin
+        $display("FAIL: JAL did not skip instruction at PC=0x40");
+        failures = failures + 1;
+        end else begin
             $display("PASS: JAL skipped instruction at PC=0x40");
         end
 
         // Check LUI and AUIPC
         $display("");
         $display("Checking LUI and AUIPC...");
-
         check_reg(22, 222);
         check_reg(23, 32'h12345000);
         check_reg(24, 32'h0000004C);
 
-        // Check final BEQ
+        // Check branches
         $display("");
-        $display("Checking BEQ...");
+        $display("Checking branch instructions...");
+        check_reg(25, 2); // BEQ:  taken + not-taken passed
+        check_reg(26, 2); // BNE:  taken + not-taken passed
+        check_reg(27, 2); // BLT:  signed taken + not-taken passed
+        check_reg(28, 2); // BGE:  signed taken + not-taken passed
+        check_reg(29, 2); // BLTU: unsigned taken + not-taken passed
+        check_reg(30, 2); // BGEU: unsigned taken + not-taken passed
 
-        if (uut.pc === 32'h00000050)
-            $display("PASS: BEQ kept PC at 0x50");
+
+        // Check final program loop
+        $display("");
+        $display("Checking final PC...");
+
+        if (uut.pc === 32'h000000E0)
+            $display("PASS: program reached final loop at PC=0xE0");
         else begin
-            $display("FAIL: expected PC=0x50, got PC=%h", uut.pc);
+            $display(
+                "FAIL: expected final PC=0xE0, got PC=%h",
+                uut.pc
+            );
             failures = failures + 1;
         end
+
 
         // Results
         $display("");

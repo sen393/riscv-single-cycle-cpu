@@ -1,29 +1,21 @@
 # RISC-V Single-Cycle CPU
 
-Building a single-cycle RISC-V CPU in Verilog, following a design shown in Harris & Harris
-(Digital Design and Computer Architecture, RISC-V edition). The current goal for this project is 
-to implement most RV32I instructions, then build a calculator program on top of it, with memory-mapped
-I/O for buttons/display. This will then be ported to a Spartan-7 board as a practice run of the FPGA 
-design workflow. 
+A 32-bit single-cycle RISC-V processor implemented in Verilog, based on the architecture presented in *Digital Design and Computer Architecture: RISC-V Edition* by Harris & Harris.
+
+The processor currently implements a 30-instruction subset of RV32I, including integer arithmetic and logic, word loads/stores, jumps, upper-immediate instructions, and all six conditional branch instructions. The design is verified using a self-checking testbench and will ultimately be synthesized and tested on a Spartan-7 FPGA.
 
 ## Status
 
-**(As of 2026-09-23)**
+- Complete single-cycle datapath and control unit
+- 30 RV32I instructions implemented
+- Self-checking simulation for implemented instructions
+- FPGA synthesis and implementation planned in Vivado
 
-**Datapath:**
-- [x] PC, PCPlus4, PCBranch
-- [x] Instruction memory (IMem)
-- [x] Register file (RegFile)
-- [x] Immediate extender (ImmExt)
-- [x] ALU
-- [x] Data memory (DMem)
-- [x] Mux2 (generic 2:1 mux)
-- [x] Control unit — MainDecoder, ALUDecoder, PCSrc
-- [x] TopModule — full datapath wired together
+## Architecture
 
-**Total Functions Implemented: 25**
+The processor uses a single-cycle datapath with separate instruction and data memories, a 32-bit register file, immediate extension, ALU, branch/jump logic, and a centralized control unit. 
 
-## Current Schematic
+Click the schematic to view the full-resolution image.
 
 <a href="images/single-cycle-riscv.jpg">
   <img src="images/single-cycle-riscv.jpg"
@@ -31,55 +23,50 @@ design workflow.
        width="900">
 </a>
 
-## Function To-Do List
+## Instruction Support
 
-**R-type**
-- [x] add
-- [x] sub
-- [x] sll
-- [x] slt
-- [x] sltu
-- [x] xor
-- [x] srl, sra
-- [x] or
-- [x] and
+| Type | Implemented Instructions |
+| --- | --- |
+| R-type | `add`, `sub`, `sll`, `slt`, `sltu`, `xor`, `srl`, `sra`, `or`, `and` |
+| I-type arithmetic | `addi`, `slti`, `sltiu`, `xori`, `ori`, `andi`, `slli`, `srli`, `srai` |
+| Load | `lw` |
+| Store | `sw` |
+| Branch | `beq`, `bne`, `blt`, `bge`, `bltu`, `bgeu` |
+| Upper immediate | `lui`, `auipc` |
+| Jump | `jal` |
 
-**I-type (arithmetic/logic)**
-- [x] addi
-- [x] slti
-- [x] sltiu
-- [x] xori
-- [x] ori
-- [x] andi
-- [x] slli
-- [x] srli
-- [x] srai
+**Total: 30 instructions**
 
-**I-type (load)**
-- [x] lw
+## Verification
 
-**S-type**
-- [x] sw
+The processor is verified using a self-checking Verilog testbench that executes machine-code test programs and checks the resulting architectural state.
 
-**B-type**
-- [x] beq
-- [ ] bne, blt, bge, bltu, bgeu
+The current test suite verifies:
 
-**U-type**
-- [x] lui
-- [x] auipc
+- Arithmetic and logical operations
+- Signed and unsigned comparisons
+- Shift operations
+- Jump and branch control flow
+- Upper-immediate instructions
+- Register write-back behavior
 
-**J-type**
-- [x] jal
-- [ ] jalr
+Simulation results are checked automatically against expected register values, while generated VCD waveforms can be inspected for additional debugging and timing analysis.
 
-## Structure
+## Repository Structure
 
-- `src/` — hardware modules
-- `sim/` — testbenches
-- `programs/` — hex-encoded test programs
+```text
+.
+├── images/      # Datapath schematics
+├── programs/    # Hex-encoded test programs
+├── sim/         # Verilog testbenches
+├── src/         # Processor RTL modules
+├── run.sh       # Compile and simulation script
+└── README.md
+```
 
-## Running a testbench
+## Running the Testbench
+
+The project uses Icarus Verilog for simulation.
 
 To compile and run the main CPU testbench:
 
@@ -89,11 +76,25 @@ To compile and run the main CPU testbench:
 
 The script:
 
-- Compiles all Verilog modules in `src/`
+- Compiles the Verilog modules in `src/`
 - Uses `sim/TopModule-tb.v` as the top-level testbench
 - Runs the simulation with `vvp`
-- Prints the test results to the terminal
-- Saves the same output to `sim_output.txt`
+- Reports self-checking test results in the terminal
+- Saves the simulation output to `sim_output.txt`
 - Generates `topmodule_tb.vcd` for waveform inspection
 
-The testbench is self-checking, so expected register values and control-flow behavior are reported automatically as `PASS` or `FAIL`.
+The generated VCD file can be opened in a waveform viewer such as GTKWave.
+
+## Roadmap
+
+- [ ] Implement remaining load instructions: `lb`, `lh`, `lbu`, `lhu`
+- [ ] Implement remaining store instructions: `sb`, `sh`
+- [ ] Implement `jalr`
+- [ ] Complete planned RV32I instruction support
+- [ ] Synthesize the processor in Vivado
+- [ ] Analyze timing and FPGA resource utilization
+- [ ] Implement and test the processor on a Spartan-7 FPGA
+
+## Reference
+
+David Money Harris and Sarah L. Harris, *Digital Design and Computer Architecture: RISC-V Edition*.

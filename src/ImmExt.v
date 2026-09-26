@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module ImmExt
 (
     input      [2:0]  imm_src,

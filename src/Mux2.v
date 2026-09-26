@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module Mux2
 (
     input         sel,

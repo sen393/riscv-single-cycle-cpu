@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module IMem
 (
 	input  [31:0] pc,
@@ -9,7 +11,7 @@ module IMem
 	assign pc_div = { 2'd0, pc[31:2] };
 
 	// Create array to store instructions
-	reg [31:0] imem [255:0];
+	reg [31:0] imem [0:255];
 
 	// Load instructions from file into array
 	initial begin

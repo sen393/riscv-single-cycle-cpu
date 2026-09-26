@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module Mux3
 (
     input  [1:0]  sel,

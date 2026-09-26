@@ -1,10 +1,13 @@
+`timescale 1ns/1ps
+
 module PCSrc
 (
-    input       zero,
-    input       branch,
-    input       jump,
-    input [2:0] funct3,
-    output      pc_src
+    input        zero,
+    input        branch,
+    input        jump,
+    input        jalr,
+    input  [2:0] funct3,
+    output [1:0] pc_src
 );
 
     reg branch_taken;
@@ -26,6 +29,7 @@ module PCSrc
         endcase
     end
 
-    assign pc_src = (branch & branch_taken) | jump;
+    assign pc_src = (jalr) ? 2'b10 : 
+                    ((branch & branch_taken) | jump) ? 2'b01 : 2'b00;
     
 endmodule

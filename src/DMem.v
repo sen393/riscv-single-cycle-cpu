@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module DMem
 (
     input              clk,
@@ -9,7 +11,7 @@ module DMem
 );
 
     // 256 words = 1024 bytes of data memory
-    reg [31:0] dmem [255:0];
+    reg [31:0] dmem [0:255];
 
     wire [7:0]  word_addr;
     wire [31:0] word_data;

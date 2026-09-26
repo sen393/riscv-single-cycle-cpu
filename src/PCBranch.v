@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module PCBranch
 (
     input  [31:0] pc,

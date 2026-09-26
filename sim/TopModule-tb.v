@@ -147,6 +147,17 @@ module TopModule_tb;
     //   sh   x14, 2(x0)         // dmem[0] -> 0xFFF0FFF0
     //   sw   x14, 4(x0)         // dmem[1] -> 0xFFFFFFF0
     //
+    //   // JALR
+    //   sw    x0, 16(x0)        // initialize skip-test sentinel
+    //   addi  x4, x0, 0x131     // odd JALR target
+    //   jalr  x4, 0(x4)         // target 0x131 -> 0x130
+    //   sw    x14, 16(x0)       // skipped
+    //   sw    x4, 8(x0)         // save link address 0x12C
+    //   auipc x4, 0             // x4 = 0x134
+    //   sw    x4, 12(x0)        // verify JALR landed correctly
+    //   lui   x4, 0x8
+    //   addi  x4, x4, 255       // restore x4 = 0x000080FF
+    //
     //   // Final infinite loop
     //   jal  x0, 0              // PC = 0x120
     //
@@ -167,9 +178,9 @@ module TopModule_tb;
         reset = 0;
 
         // Run long enough to complete all tests and reach
-        // the final JAL loop at PC=0x120.
+        // the final JAL loop at PC=0x144.
 
-        repeat (90)
+        repeat (110)
             @(posedge clk);
 
         #1;
@@ -260,21 +271,57 @@ module TopModule_tb;
             failures = failures + 1;
         end
 
+        // Check JALR
+        $display("");
+        $display("Checking JALR...");
+
+        // JALR should skip the instruction at PC=0x12C
+        if (uut.dmem.dmem[4] === 32'h00000000)
+            $display("PASS: JALR skipped instruction at PC=0x12C");
+        else begin
+            $display(
+                "FAIL: expected dmem[4]=0, got 0x%h",
+                uut.dmem.dmem[4]
+            );
+            failures = failures + 1;
+        end
+
+        // rd should receive PC + 4
+        if (uut.dmem.dmem[2] === 32'h0000012C)
+            $display("PASS: JALR wrote PC+4 = 0x12C");
+        else begin
+            $display(
+                "FAIL: expected JALR link=0x12C, got 0x%h",
+                uut.dmem.dmem[2]
+            );
+            failures = failures + 1;
+        end
+
+        // Verify target LSB was cleared
+        if (uut.dmem.dmem[3] === 32'h00000134)
+            $display("PASS: JALR target LSB cleared correctly");
+        else begin
+            $display(
+                "FAIL: expected PC-derived value 0x134, got 0x%h",
+                uut.dmem.dmem[3]
+            );
+            failures = failures + 1;
+        end
+
 
         // Check final program loop
         $display("");
         $display("Checking final PC...");
 
-        if (uut.pc === 32'h00000120)
-            $display("PASS: program reached final loop at PC=0x120");
+        if (uut.pc === 32'h00000144)
+            $display("PASS: program reached final loop at PC=0x144");
         else begin
             $display(
-                "FAIL: expected final PC=0x120, got PC=%h",
+                "FAIL: expected final PC=0x144, got PC=%h",
                 uut.pc
             );
             failures = failures + 1;
         end
-
 
         // Results
         $display("");

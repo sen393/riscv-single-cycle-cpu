@@ -1,7 +1,10 @@
+`timescale 1ns/1ps
+
 module MainDecoder
 (
     input      [6:0] opcode,
     output reg       jump,
+    output reg       jalr,
     output reg       branch,
     output reg       mem_write,
     output reg       reg_write,
@@ -14,8 +17,10 @@ module MainDecoder
 
     always @(*) begin
         case (opcode)
+
             7'b0110011: begin // R-type
                 jump        = 1'b0;
+                jalr        = 1'b0;
                 branch      = 1'b0;
                 mem_write   = 1'b0;
                 reg_write   = 1'b1;
@@ -25,8 +30,10 @@ module MainDecoder
                 imm_src     = 3'b000; // Not used
                 alu_op      = 2'b10; // ALU control determined by funct3 and funct7
             end
+
             7'b0000011: begin // I-type (load)
                 jump        = 1'b0;
+                jalr        = 1'b0;
                 branch      = 1'b0;
                 mem_write   = 1'b0;
                 reg_write   = 1'b1;
@@ -36,8 +43,10 @@ module MainDecoder
                 imm_src     = 3'b000; // I-type immediate
                 alu_op      = 2'b00; // ALU performs addition for address calculation
             end
+
             7'b0100011: begin // S-type (store)
                 jump        = 1'b0;
+                jalr        = 1'b0;
                 branch      = 1'b0;
                 mem_write   = 1'b1;  // Enable memory write
                 reg_write   = 1'b0;
@@ -47,8 +56,10 @@ module MainDecoder
                 imm_src     = 3'b001; // S-type immediate
                 alu_op      = 2'b00; // ALU performs addition for address calculation
             end
+
             7'b1100011: begin // B-type (branch)
                 jump        = 1'b0;
+                jalr        = 1'b0;
                 branch      = 1'b1;  // Enable branching
                 mem_write   = 1'b0;
                 reg_write   = 1'b0;
@@ -58,8 +69,10 @@ module MainDecoder
                 imm_src     = 3'b010; // B-type immediate
                 alu_op      = 2'b01; // ALU performs subtraction for comparison
             end
+
             7'b0010011: begin // I-type (addi)
                 jump        = 1'b0;
+                jalr        = 1'b0;
                 branch      = 1'b0;
                 mem_write   = 1'b0;
                 reg_write   = 1'b1;
@@ -69,8 +82,10 @@ module MainDecoder
                 imm_src     = 3'b000; // I-type immediate
                 alu_op      = 2'b10; // ALU performs addition
             end
+
             7'b1101111: begin // J-type (jal)
                 jump        = 1'b1;
+                jalr        = 1'b0;
                 branch      = 1'b0;
                 mem_write   = 1'b0;
                 reg_write   = 1'b1;
@@ -80,8 +95,23 @@ module MainDecoder
                 imm_src     = 3'b011;
                 alu_op      = 2'b00;    // ALU performs addition
             end
+
+            7'b1100111: begin // I-type (jalr)
+                jump        = 1'b0;
+                jalr        = 1'b1;
+                branch      = 1'b0;
+                mem_write   = 1'b0;
+                reg_write   = 1'b1;
+                result_src  = 2'b10; // rd = PC + 4
+                alu_a_src   = 2'b10; // rs1
+                alu_b_src   = 1'b1;  // immediate
+                imm_src     = 3'b000; // I-type immediate
+                alu_op      = 2'b00;  // ADD: rs1 + immediate
+            end
+
             7'b0110111: begin // U-type (lui)
                 jump        = 1'b0;
+                jalr        = 1'b0;
                 branch      = 1'b0;
                 mem_write   = 1'b0;
                 reg_write   = 1'b1;
@@ -91,8 +121,10 @@ module MainDecoder
                 imm_src     = 3'b100;   // U-type immediate extension
                 alu_op      = 2'b00;    // ALU performs addition
             end
+
             7'b0010111: begin // U-type (auipc)
                 jump        = 1'b0;
+                jalr        = 1'b0;
                 branch      = 1'b0;
                 mem_write   = 1'b0;
                 reg_write   = 1'b1;
@@ -102,8 +134,10 @@ module MainDecoder
                 imm_src     = 3'b100;   // U-type immediate extension
                 alu_op      = 2'b00;    // ALU performs addition
             end
+
             default: begin
                 jump        = 1'b0;
+                jalr        = 1'b0;
                 branch      = 1'b0;
                 mem_write   = 1'b0;
                 reg_write   = 1'b0;
@@ -113,6 +147,7 @@ module MainDecoder
                 imm_src     = 3'b000; 
                 alu_op      = 2'b00; 
             end
+
         endcase
     end
 

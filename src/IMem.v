@@ -15,7 +15,11 @@ module IMem
 
 	// Load instructions from file into array
 	initial begin
-		$readmemh( "programs/program.hex", imem );
+	`ifdef SYNTHESIS
+		$readmemh("program.mem", imem);
+	`else
+		$readmemh("programs/program.mem", imem);
+	`endif
 	end
 
 	// Load instruction to output instr

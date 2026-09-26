@@ -1,8 +1,9 @@
 `timescale 1ns/1ps
 
 module TopModule (
-    input clk,
-    input reset
+    input         clk,
+    input         reset,
+    output [31:0] debug_pc
 );
 
     // Fetch stage intermediate wires
@@ -31,6 +32,8 @@ module TopModule (
     wire [1:0] result_src, alu_a_src, pc_src, alu_op;
     wire [2:0] imm_src;
     wire [3:0] alu_control;
+
+    assign debug_pc = pc;
 
     PCPlus4 pcplus4
     (

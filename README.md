@@ -19,8 +19,8 @@ The next-PC logic supports sequential execution, PC-relative branches and jumps,
 
 Click the schematic to view the full-resolution image.
 
-<a href="images/single-cycle-riscv.jpg">
-  <img src="images/single-cycle-riscv.jpg"
+<a href="images/single-cycle-riscv-1.jpg">
+  <img src="images/single-cycle-riscv-1.jpg"
        alt="RISC-V Single-Cycle CPU Schematic"
        width="900">
 </a>

@@ -101,6 +101,7 @@ module TopModule (
     (
         .clk        (clk),
         .we         (mem_write),
+        .funct3     (funct3),
         .addr       (alu_result),
         .write_data (rd_2),
         .read_data  (read_data)

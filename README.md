@@ -6,10 +6,10 @@ The processor currently implements 37 RV32I instructions, including integer arit
 
 ## Status
 
-- Complete single-cycle datapath and control unit
 - 37 RV32I instructions implemented
-- Self-checking simulation for implemented instructions
-- FPGA synthesis and implementation planned in Vivado
+- Self-checking functional verification
+- Synthesized and implemented for Spartan-7 XC7S50
+- Timing closure achieved at ~64.7 MHz
 
 ## Architecture
 
@@ -60,15 +60,83 @@ The current test suite verifies:
 
 Simulation results are checked automatically against expected register values, while generated VCD waveforms can be inspected for additional debugging and timing analysis.
 
+## FPGA Implementation
+
+The processor was synthesized, placed, and routed in AMD Vivado for the
+Real Digital Urbana board's Spartan-7 FPGA (`xc7s50csg324-1`).
+
+The Vivado clock constraint is stored in:
+
+[`timing/timing.xdc`](./timing/timing.xdc)
+
+Instruction memory is initialized from:
+
+[`programs/program.mem`](./programs/program.mem)
+
+`IMem.v` uses conditional compilation so that Icarus Verilog and Vivado
+can reference the same memory initialization file from their respective
+working directories.
+
+### Timing
+
+| Metric | Result |
+| --- | --- |
+| Initial target frequency | 100 MHz |
+| Initial target period | 10.00 ns |
+| Initial WNS | -4.431 ns |
+| Minimum verified passing period | 15.45 ns |
+| Maximum verified clock frequency | ~64.7 MHz |
+
+The implemented design achieved timing closure at a clock period of
+15.45 ns, corresponding to approximately 64.7 MHz.
+
+### Resource Utilization
+
+| Resource | Used | Available | Utilization |
+| --- | ---: | ---: | ---: |
+| LUTs | 1,055 | 32,600 | 3.24% |
+| LUTRAM | 172 | 9,600 | 1.79% |
+| Flip-Flops | 32 | 65,200 | 0.05% |
+| BUFG | 1 | 32 | 3.13% |
+
+Memory structures are primarily implemented using distributed RAM,
+consistent with the asynchronous-read behavior required by the
+single-cycle datapath.
+
+### Design Analysis
+
+As expected for a single-cycle architecture, the processor's critical
+timing path occurs through a load instruction. A load must complete
+instruction fetch, register-file access, address calculation, data-memory
+access, and register write-back within a single clock cycle.
+
+This long combinational path prevented the design from meeting the
+initial 100 MHz timing target. Timing closure was achieved at
+approximately 64.7 MHz on the Spartan-7 XC7S50.
+
+The design uses relatively few FPGA resources, with approximately 3.35%
+of available LUTs utilized. The register file and memory structures are
+primarily implemented using distributed RAM, which is consistent with
+the asynchronous-read behavior used by the single-cycle datapath.
+
+This implementation provides a useful baseline for a future pipelined
+processor. A pipelined architecture would divide the current critical
+path across multiple stages, potentially allowing a significantly higher
+clock frequency at the cost of additional pipeline registers, forwarding
+logic, and hazard-control circuitry.
+
 ## Repository Structure
 
 ```text
 .
-├── images/      # Datapath schematics
-├── programs/    # Hex-encoded test programs
-├── sim/         # Verilog testbenches
-├── src/         # Processor RTL modules
-├── run.sh       # Compile and simulation script
+├── images/          # Datapath schematics
+├── programs/        # Memory initialization program
+│   └── program.mem
+├── sim/             # Verilog testbenches
+├── src/             # Processor RTL modules
+├── timing/          # Vivado timing constraints
+│   └── timing.xdc
+├── run.sh           # Icarus Verilog simulation script
 └── README.md
 ```
 
@@ -95,10 +163,12 @@ The generated VCD file can be opened in a waveform viewer such as GTKWave.
 
 ## Roadmap
 
-- [ ] Complete remaining RV32I system/synchronization instruction support as needed
-- [ ] Synthesize the processor in Vivado
-- [ ] Analyze timing and FPGA resource utilization
-- [ ] Implement and test the processor on a Spartan-7 FPGA
+- [x] Complete single-cycle processor datapath and control
+- [x] Verify implemented RV32I instructions
+- [x] Synthesize and implement on Spartan-7
+- [x] Characterize timing and FPGA resource utilization
+- [ ] Add memory-mapped I/O and board-level peripherals
+- [ ] Develop a pipelined processor implementation
 
 ## Reference
 
